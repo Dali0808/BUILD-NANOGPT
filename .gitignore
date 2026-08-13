@@ -35,6 +35,8 @@ desktop.ini
 logs/
 
 # ML training outputs
+.hf_cache/
+.hfcache/
 checkpoints/
 ckpt/
 runs/
