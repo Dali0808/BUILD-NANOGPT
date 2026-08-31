@@ -234,13 +234,14 @@ if torch.cuda.is_available():
     torch.cuda.manual_seed(1337)
 
 # train_loader = DataLoaderLite(B=16, T=1024)
-train_loader = DataLoaderLite(B=8, T=128)
+train_loader = DataLoaderLite(B=16, T=256)
 
 torch.set_float32_matmul_precision('high')
 
 # get logits
 model = GPT(GPTConfig()).to(device)
 model.to(device)
+model = torch.compile(model)
 
 # optimize!
 optimizer = torch.optim.AdamW(model.parameters(), lr=3e-4)
