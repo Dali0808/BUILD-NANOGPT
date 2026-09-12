@@ -327,7 +327,7 @@ else:
     elif hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
         device = "mps"
     print(f"using device: {device}")
-
+device_type = "cuda" if device.startswith("cuda") else "cpu"
 torch.manual_seed(1337)
 if torch.cuda.is_available():
     torch.cuda.manual_seed(1337)
@@ -424,7 +424,7 @@ for step in range(max_steps):
             mask = mask.to(device)
             # get the logits
             with torch.no_grad():
-                with torch.autocast(device_type=device, dtype=torch.bfloat16):
+                with torch.autocast(device_type=device_type, dtype=torch.bfloat16):
                     logits, loss = model(tokens)
                 pred_norm = get_most_likely_row(tokens, mask, logits)
             num_total += 1
@@ -457,7 +457,7 @@ for step in range(max_steps):
         while xgen.size(1) < max_length:
             # forward the model to get the logits
             with torch.no_grad():
-                with torch.autocast(device_type=device, dtype=torch.bfloat16):
+                with torch.autocast(device_type=device_type, dtype=torch.bfloat16):
                     logits, loss = model(xgen) # (B, T, vocab_size)
                 # take the logits at the last position
                 logits = logits[:, -1, :] # (B, vocab_size)
@@ -486,7 +486,6 @@ for step in range(max_steps):
     for micro_step in range(grad_accum_steps):
         x, y = train_loader.next_batch()
         x, y = x.to(device), y.to(device)
-        device_type = "cuda" if device.startswith("cuda") else "cpu"
         with torch.autocast(device_type=device_type, dtype=torch.bfloat16):
             logits, loss = model(x, y)
         # we have to scale the loss to account for gradient accumulation,
