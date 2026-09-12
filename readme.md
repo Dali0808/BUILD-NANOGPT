@@ -1,0 +1,4 @@
+# build nanoGPT
+
+这个仓库是我看karpathy的课程LLM-ZeroToHero最后的一个章节reproduce gpt2时跟着课程一起搭建的代码仓库
+每次新增或者修改功能都通过commit进行代码提交（commit参照了karpathy的build-nanogpt代码仓库）
